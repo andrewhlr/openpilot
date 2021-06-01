@@ -305,7 +305,7 @@ class CarInterface(CarInterfaceBase):
     # most HKG cars has no long control
     if self.mad_mode_enabled and not self.CC.longcontrol:
       ret.cruiseState.enabled = ret.cruiseState.available
-      ret.brakePressed = ret.gasPressed = False
+      ret.brakePressed = ret.gasPressed = False # --Should allow steering even after brake pressed. Currently not working.
 
     # turning indicator alert logic
     if (ret.leftBlinker or ret.rightBlinker or self.CC.turning_signal_timer) and ret.vEgo < LANE_CHANGE_SPEED_MIN - 1.2:
@@ -348,8 +348,8 @@ class CarInterface(CarInterfaceBase):
       events.add(EventName.brakeUnavailable)
     #if abs(ret.steeringAngleDeg) > 90. and EventName.steerTempUnavailable not in events.events:
     #  events.add(EventName.steerTempUnavailable)
-    #if self.low_speed_alert and not self.CS.mdps_bus:
-    #  events.add(EventName.belowSteerSpeed)
+    if self.low_speed_alert and not self.CS.mdps_bus:
+      events.add(EventName.belowSteerSpeed)
     if self.CC.turning_indicator_alert:
       events.add(EventName.turningIndicatorOn)
     if self.CS.lkas_button_on != self.CS.prev_lkas_button:
